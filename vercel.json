@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "outputDirectory": ".",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/mines/(.*)", "destination": "/api/index" },
+    { "source": "/api/(.*)", "destination": "/api/index" }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/mines/", "permanent": false },
+    { "source": "/mines", "destination": "/mines/", "permanent": false }
+  ],
+  "headers": [
+    { "source": "/static/(.*)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
+  ]
+}
+

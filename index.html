@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="CAVEMINES - Игра в мины" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>CAVEMINES - Игра в мины</title>
+    <script>(function(){if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./mock-sw.js',{scope:'./'}).catch(function(){})});}})();</script>
+    <script defer="defer" src="/static/js/runtime.830375236abe52ab9f6f.js"></script>
+    <script defer="defer" src="/static/js/main.95a51fb23a11010e8f6e.js"></script>
+    <link href="/static/css/main.144a5b0d.css" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: #000; 
+            color: #fff; 
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #root { 
+            width: 100vw;
+            height: 100vh;
+        }
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+            color: #ff6b6b;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <noscript>Вам нужно включить JavaScript для запуска игры.</noscript>
+    <div id="root">
+        <div class="loading">
+            <div>🎮 CAVEMINES</div>
+            <div class="spinner"></div>
+            <div>Загрузка игры...</div>
+        </div>
+    </div>
+    
+    <script>
+        // Скрываем загрузку когда игра загрузится
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const loading = document.querySelector('.loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+            }, 2000);
+        });
+        
+        // Проверяем загрузку API
+        fetch('/mines/user')
+            .then(response => response.json())
+            .then(data => {
+                console.log('CAVEMINES: API работает, баланс:', data.balance);
+            })
+            .catch(error => {
+                console.error('CAVEMINES: Ошибка API:', error);
+            });
+    </script>
+</body>
+</html>

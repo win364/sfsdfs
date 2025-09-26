@@ -1,0 +1,15 @@
+{
+  "name": "CAVEMINES - Игра в мины",
+  "short_name": "CAVEMINES",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "/static/media/cells-mask.1a7021b147b7851ffef6.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
