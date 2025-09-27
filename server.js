@@ -7,7 +7,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { exec } = require('child_process');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 8080;
 const ROOT = process.cwd();
 const HISTORY_FILE = path.join(ROOT,'prod-rnd-backend-php-orchestra.100hp.app','mines','sessions.html');
 
@@ -443,47 +443,6 @@ const server = http.createServer(async (req,res)=>{
     if (pth.startsWith('/static/')) pth = path.posix.join('/prod-rnd-frontend-php-orchestra.100hp.app', pth);
     if (pth === '/favicon.svg') pth = path.posix.join('/prod-rnd-frontend-php-orchestra.100hp.app', pth);
 
-    // Handle static files first
-    if (urlPath.startsWith('/static/') || urlPath === '/favicon.svg' || urlPath === '/manifest.json') {
-      try {
-        const filePath = path.join(process.cwd(), pth);
-        if (fs.existsSync(filePath)) {
-          const ext = path.extname(filePath);
-          const contentType = {
-            '.js': 'application/javascript',
-            '.css': 'text/css',
-            '.svg': 'image/svg+xml',
-            '.png': 'image/png',
-            '.webp': 'image/webp',
-            '.woff2': 'font/woff2',
-            '.woff': 'font/woff',
-            '.mp3': 'audio/mpeg',
-            '.json': 'application/json'
-          }[ext] || 'application/octet-stream';
-          
-          const content = fs.readFileSync(filePath);
-          send(res, 200, content, { 'Content-Type': contentType });
-          return;
-        } else {
-          // For missing JS chunks, return empty module to prevent errors
-          if (urlPath.includes('.chunk.js')) {
-            send(res, 200, '// Empty chunk', { 'Content-Type': 'application/javascript' });
-            return;
-          } else if (urlPath.includes('.woff2') || urlPath.includes('.woff')) {
-            // For missing fonts, return empty response
-            send(res, 200, '', { 'Content-Type': 'font/woff2' });
-            return;
-          } else {
-            send(res, 404, 'File not found');
-            return;
-          }
-        }
-      } catch (error) {
-        send(res, 500, 'Error reading file');
-        return;
-      }
-    }
-
     // Static serving
     const resolved = safeResolve(pth);
     if (!resolved) return send(res,403,'Forbidden');
@@ -727,17 +686,11 @@ const server = http.createServer(async (req,res)=>{
   }
 });
 
-// For Vercel deployment
-if (process.env.NODE_ENV === 'production') {
-  module.exports = server;
-} else {
-  // For local development
-  server.listen(PORT, () => {
-    const url = `http://localhost:${PORT}/mines/`;
-    console.log(`[server] listening on ${PORT}`);
-    console.log(`[server] open: ${url}`);
-    try { exec(`start "" "${url}"`); } catch {}
-  });
-}
+server.listen(PORT, () => {
+  const url = `http://localhost:${PORT}/mines/`;
+  console.log(`[server] listening on ${PORT}`);
+  console.log(`[server] open: ${url}`);
+  try { exec(`start "" "${url}"`); } catch {}
+});
 
 
